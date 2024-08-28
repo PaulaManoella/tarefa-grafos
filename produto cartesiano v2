@@ -1,0 +1,65 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+import os
+
+def obter_grafo(numero):
+    print(f'Grafo {numero}\n' + '='*45)
+    
+    vertices = []
+    vertices_input = input('Informe o primeiro vertice: ')
+
+    vertices.append(vertices_input)
+
+    while True:
+        vertice_op = input('informe o novo vertice, ou pressione enter se nao desejar adicionar: ')
+        if vertice_op == "":
+            break
+        else:
+            vertices.append(vertice_op)
+    
+    print(vertices)
+
+ #   v = int(input(f'Informe o número de vértices do grafo {numero}: '))
+  #  lista_v = [i + 1 for i in range(v)]
+
+    arestas = []
+    while True:
+        op = input('Deseja adicionar uma nova aresta? (sim/nao) ')
+        if op  == "nao":
+            break
+        if op=='sim':   
+            arestas_input = input("Informe as arestas separadas por espaço.\nExemplo: vertice1 vertice2\n")
+            separado = arestas_input.split()
+            print(separado)
+            tupla = (separado[0], separado[1])
+            print(type(tupla))
+            arestas.append(tupla)
+        else:
+            print('Informe uma opção válida.')
+    
+    return vertices, arestas
+
+v1, e1 = obter_grafo(1)
+v2, e2 = obter_grafo(2)
+
+produto_cartesiano = [(v1[i], v2[j]) for i in range(len(v1)) for j in range(len(v2))]
+
+os.system('cls')
+print(f'Produto cartesiano dos vértices:\n\n{produto_cartesiano}')
+
+arestas_produto_cartesiano = []
+
+for i, (v1_a, v2_a) in enumerate(produto_cartesiano):
+    for j, (v1_b, v2_b) in enumerate(produto_cartesiano):
+        if i != j:
+            #compara o primeiro elemento do par
+            if v1_a == v1_b and (v2_a, v2_b) in e2:
+                arestas_produto_cartesiano.append(((v1_a, v2_a), (v1_b, v2_b)))
+            #compara o segundo elemento do par
+            if v2_a == v2_b and (v1_a, v1_b) in e1:
+                arestas_produto_cartesiano.append(((v1_a, v2_a), (v1_b, v2_b)))
+
+G = nx.Graph()
+G.add_edges_from(arestas_produto_cartesiano)
+nx.draw(G, with_labels=True)
+plt.show()
